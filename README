@@ -1,0 +1,8 @@
+Format piped input in a nice table.
+
+Dependencies:
+
+- Boost
+- Qt
+- Qmake
+- TCLAP
