@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
 
 //Third party includes
 #include <boost/algorithm/string.hpp>

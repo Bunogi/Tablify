@@ -29,6 +29,7 @@ int main(int argc, char *argv[])
 	cmd.add(formatArg);
 	cmd.add(minWidthArg);
 	cmd.add(minHeightArg);
+	cmd.add(filterColArg);
 
 	cmd.add(colArg);
 
