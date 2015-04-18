@@ -21,9 +21,13 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
+	setMinimumHeight(minHeightArg.getValue());
+	setMinimumWidth(minWidthArg.getValue());
+
 	ui->setupUi(this);
 
-	QStandardItemModel *model = new QStandardItemModel(0, 1, this);
+
+	QStandardItemModel *model = new QStandardItemModel(0, 0, this);
 
 	for(int iii = 0; iii < colNames.size(); iii++)
 		model->setHorizontalHeaderItem(iii, new QStandardItem(colNames[iii].c_str()));
@@ -70,9 +74,9 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
 	int row = index.row();
 
-	QString hi = ui->tableView->model()->data(ui->tableView->model()->index( row, returnArg.getValue() )).toString();
+	QString output = ui->tableView->model()->data(ui->tableView->model()->index( row, returnArg.getValue() )).toString();
 
-	std::cout<< qPrintable(hi) << "\n";
+	std::cout<< qPrintable(output) << "\n";
 	exit(0);
 }
 
@@ -85,6 +89,7 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 	int cols = ui->tableView->model()->columnCount();
 
 	//Search through the entire table for the inputted text.
+	//Selects the first entry it finds.
 	for(int iii = 0; iii < cols; iii++)
 	{
 		for(int jjj = 0; jjj < rows; jjj++)
