@@ -17,6 +17,7 @@ SOURCES += main.cpp\
 				mainwindow.cpp
 
 HEADERS  += mainwindow.h \
-		arguments.h
+		arguments.h \
+    proxymodel.h
 
 FORMS    += mainwindow.ui

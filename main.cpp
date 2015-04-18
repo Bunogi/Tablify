@@ -18,6 +18,7 @@ TCLAP::ValueArg<int> returnArg("r", "returncollumn", "Column to return data from
 TCLAP::ValueArg<std::string> formatArg("f", "format", "The format character.", false, "\t", "format");
 TCLAP::ValueArg<int> minWidthArg("W", "width", "The minimum width of the window.", false, 800, "width");
 TCLAP::ValueArg<int> minHeightArg("H", "height", "The minimum height of the window.", false, 300, "height");
+TCLAP::ValueArg<int> filterColArg("c", "filtercolumn", "the column to filter by.", false, 0, "filter");
 TCLAP::UnlabeledMultiArg<std::string> colArg("names", "The names for the collumns. Add as many as you want.", true, "column names");
 
 int main(int argc, char *argv[])

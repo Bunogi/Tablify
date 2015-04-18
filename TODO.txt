@@ -1,0 +1,3 @@
+Make the default size implementation better, as in allow it to be resized.
+
+Have it filter by all columns at once.

@@ -13,9 +13,11 @@
 #include <QStandardItemModel>
 #include <QList>
 #include <QTableWidgetItem>
+#include <QSortFilterProxyModel>
 
 //Custom headers
 #include "arguments.h"
+#include "proxymodel.h"
 
 MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vector<std::string> colNames) :
 	QMainWindow(parent),
@@ -58,7 +60,14 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		model->appendRow(list);
 	}
 
-	ui->tableView->setModel(model);
+	//Used for filtering
+	proxyModel->setSourceModel(model);
+	proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+	proxyModel->setDynamicSortFilter(true);
+	//Placeholder
+	proxyModel->setFilterKeyColumn(filterColArg.getValue());
+
+	ui->tableView->setModel(proxyModel);
 	ui->tableView->horizontalHeader()->setStretchLastSection(true);
 	ui->tableView->resizeColumnsToContents();
 
@@ -82,9 +91,15 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
-	if(arg1 == "")
+	if(arg1 == "" or arg1 == " ") //Do not search for spaces or nothing.
+	{
+		proxyModel->setFilterRegExp(QRegExp("", Qt::CaseInsensitive, QRegExp::FixedString));
 		return;
+	}
 
+	proxyModel->setFilterRegExp(QRegExp(arg1, Qt::CaseInsensitive, QRegExp::FixedString));
+
+	/*
 	int rows = ui->tableView->model()->rowCount();
 	int cols = ui->tableView->model()->columnCount();
 
@@ -102,6 +117,7 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 			}
 		}
 	}
+	*/
 }
 
 void MainWindow::on_lineEdit_returnPressed()
