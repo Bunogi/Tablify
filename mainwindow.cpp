@@ -16,7 +16,6 @@
 
 //Custom headers
 #include "arguments.h"
-#include "proxymodel.h"
 
 MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vector<std::string> colNames) :
 	QMainWindow(parent),
@@ -57,14 +56,14 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		model->appendRow(list);
 	}
 
-	//Used for filtering
-	proxyModel->setSourceModel(model);
-	proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-	proxyModel->setDynamicSortFilter(true);
+	//Used for filtering, not used in master because it's kind of broken at the moment.
+	//proxyModel->setSourceModel(model);
+	//proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+	//proxyModel->setDynamicSortFilter(true);
 	//Placeholder
-	proxyModel->setFilterKeyColumn(filterColArg.getValue());
+	//proxyModel->setFilterKeyColumn(filterColArg.getValue());
 
-	ui->tableView->setModel(proxyModel);
+	ui->tableView->setModel(model);
 	ui->tableView->horizontalHeader()->setStretchLastSection(true);
 	ui->tableView->resizeColumnsToContents();
 
@@ -90,13 +89,12 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
 	if(arg1 == "" or arg1 == " ") //Do not search for spaces or nothing.
 	{
-		proxyModel->setFilterWildcard(QString(arg1));
+		//proxyModel->setFilterWildcard(QString(arg1));
 		return;
 	}
 
-	proxyModel->setFilterWildcard(QString(arg1));
+	//proxyModel->setFilterWildcard(QString(arg1));
 
-	/*
 	int rows = ui->tableView->model()->rowCount();
 	int cols = ui->tableView->model()->columnCount();
 
@@ -114,7 +112,6 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 			}
 		}
 	}
-	*/
 }
 
 void MainWindow::on_lineEdit_returnPressed()

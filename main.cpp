@@ -13,7 +13,7 @@
 #include <QTableWidget>
 
 //These need to be global
-TCLAP::CmdLine cmd("Format text in a table", ' ', "0.7-dev");
+TCLAP::CmdLine cmd("Format text in a table", ' ', "0.7-master");
 TCLAP::ValueArg<int> returnArg("r", "returncollumn", "Column to return data from", false, 0, "column");
 TCLAP::ValueArg<std::string> formatArg("f", "format", "The format character.", false, "\t", "format");
 TCLAP::ValueArg<int> minWidthArg("W", "width", "The minimum width of the window.", false, 800, "width");
