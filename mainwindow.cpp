@@ -22,11 +22,9 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 	QMainWindow(parent),
 	ui(new Ui::MainWindow)
 {
-	setMinimumHeight(minHeightArg.getValue());
-	setMinimumWidth(minWidthArg.getValue());
-
 	ui->setupUi(this);
 
+	resize(minWidthArg.getValue(), minHeightArg.getValue());
 
 	QStandardItemModel *model = new QStandardItemModel(0, 0, this);
 
@@ -92,11 +90,11 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
 	if(arg1 == "" or arg1 == " ") //Do not search for spaces or nothing.
 	{
-		proxyModel->setFilterRegExp(QRegExp("", Qt::CaseInsensitive, QRegExp::FixedString));
+		proxyModel->setFilterWildcard(QString(arg1));
 		return;
 	}
 
-	proxyModel->setFilterRegExp(QRegExp(arg1, Qt::CaseInsensitive, QRegExp::FixedString));
+	proxyModel->setFilterWildcard(QString(arg1));
 
 	/*
 	int rows = ui->tableView->model()->rowCount();
