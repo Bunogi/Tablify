@@ -12,7 +12,6 @@
 #include <QStandardItemModel>
 #include <QList>
 #include <QTableWidgetItem>
-#include <QSortFilterProxyModel>
 
 //Custom headers
 #include "arguments.h"
@@ -56,13 +55,6 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		model->appendRow(list);
 	}
 
-	//Used for filtering, not used in master because it's kind of broken at the moment.
-	//proxyModel->setSourceModel(model);
-	//proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
-	//proxyModel->setDynamicSortFilter(true);
-	//Placeholder
-	//proxyModel->setFilterKeyColumn(filterColArg.getValue());
-
 	ui->tableView->setModel(model);
 	ui->tableView->horizontalHeader()->setStretchLastSection(true);
 	ui->tableView->resizeColumnsToContents();
@@ -82,7 +74,8 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 	QString output = ui->tableView->model()->data(ui->tableView->model()->index( row, returnArg.getValue() )).toString();
 
 	std::cout<< qPrintable(output) << "\n";
-	exit(0);
+	if(not closeArg.getValue())
+		exit(0);
 }
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
@@ -125,5 +118,6 @@ void MainWindow::on_lineEdit_returnPressed()
 	QString output = ui->tableView->model()->data(ui->tableView->model()->index( row, returnArg.getValue() )).toString();
 
 	std::cout<< qPrintable(output) << "\n";
-	exit(0);
+	if(not closeArg.getValue())
+		exit(0);
 }

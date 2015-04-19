@@ -12,6 +12,8 @@ extern TCLAP::ValueArg<int> minWidthArg;
 extern TCLAP::ValueArg<int> minHeightArg;
 extern TCLAP::ValueArg<int> filterColArg;
 
+extern TCLAP::SwitchArg closeArg;
+
 extern TCLAP::UnlabeledMultiArg<std::string> colArg;
 
 #endif // ARGUMENTS
