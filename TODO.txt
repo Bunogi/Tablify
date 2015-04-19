@@ -1,0 +1,1 @@
+Have it filter by all columns at once.

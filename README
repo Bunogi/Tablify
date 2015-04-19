@@ -6,3 +6,11 @@ Dependencies:
 - Qt
 - Qmake
 - TCLAP
+
+To compile:
+
+mkdir Build
+cd Build
+qmake ..
+make
+(Move the freshly compiled executable to /usr/bin or /bin depending on your distrobution if you want to install it)

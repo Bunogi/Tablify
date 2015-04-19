@@ -2,7 +2,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <algorithm>
 
 //Third party includes
 #include <boost/algorithm/string.hpp>
@@ -13,9 +12,11 @@
 #include <QStandardItemModel>
 #include <QList>
 #include <QTableWidgetItem>
+#include <QSortFilterProxyModel>
 
 //Custom headers
 #include "arguments.h"
+#include "proxymodel.h"
 
 MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vector<std::string> colNames) :
 	QMainWindow(parent),
@@ -23,7 +24,9 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 {
 	ui->setupUi(this);
 
-	QStandardItemModel *model = new QStandardItemModel(0, 1, this);
+	resize(minWidthArg.getValue(), minHeightArg.getValue());
+
+	QStandardItemModel *model = new QStandardItemModel(0, 0, this);
 
 	for(int iii = 0; iii < colNames.size(); iii++)
 		model->setHorizontalHeaderItem(iii, new QStandardItem(colNames[iii].c_str()));
@@ -54,7 +57,14 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		model->appendRow(list);
 	}
 
-	ui->tableView->setModel(model);
+	//Used for filtering
+	proxyModel->setSourceModel(model);
+	proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+	proxyModel->setDynamicSortFilter(true);
+	//Placeholder
+	proxyModel->setFilterKeyColumn(filterColArg.getValue());
+
+	ui->tableView->setModel(proxyModel);
 	ui->tableView->horizontalHeader()->setStretchLastSection(true);
 	ui->tableView->resizeColumnsToContents();
 
@@ -70,21 +80,28 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 {
 	int row = index.row();
 
-	QString hi = ui->tableView->model()->data(ui->tableView->model()->index( row, returnArg.getValue() )).toString();
+	QString output = ui->tableView->model()->data(ui->tableView->model()->index( row, returnArg.getValue() )).toString();
 
-	std::cout<< qPrintable(hi) << "\n";
+	std::cout<< qPrintable(output) << "\n";
 	exit(0);
 }
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
-	if(arg1 == "")
+	if(arg1 == "" or arg1 == " ") //Do not search for spaces or nothing.
+	{
+		proxyModel->setFilterWildcard(QString(arg1));
 		return;
+	}
 
+	proxyModel->setFilterWildcard(QString(arg1));
+
+	/*
 	int rows = ui->tableView->model()->rowCount();
 	int cols = ui->tableView->model()->columnCount();
 
 	//Search through the entire table for the inputted text.
+	//Selects the first entry it finds.
 	for(int iii = 0; iii < cols; iii++)
 	{
 		for(int jjj = 0; jjj < rows; jjj++)
@@ -97,6 +114,7 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 			}
 		}
 	}
+	*/
 }
 
 void MainWindow::on_lineEdit_returnPressed()
