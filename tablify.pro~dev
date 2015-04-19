@@ -17,11 +17,7 @@ SOURCES += main.cpp\
 				mainwindow.cpp
 
 HEADERS  += mainwindow.h \
-<<<<<<< HEAD:tablify.pro
-		arguments.h
-=======
 		arguments.h \
     proxymodel.h
->>>>>>> dev:tablify.pro
 
 FORMS    += mainwindow.ui
