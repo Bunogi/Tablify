@@ -1,7 +1,6 @@
 //Standard includes
 #include <string>
 #include <vector>
-#include <iostream>
 
 //Third party includes
 #include <tclap/CmdLine.h>
@@ -12,13 +11,14 @@
 #include <QtGui>
 
 //These need to be global
-TCLAP::CmdLine cmd("Format text in a table", ' ', "0.7-master");
-TCLAP::ValueArg<int> returnArg("r", "returncollumn", "Column to return data from", false, 0, "column");
-TCLAP::ValueArg<std::string> formatArg("f", "format", "The format character.", false, "\t", "format");
-TCLAP::ValueArg<int> minWidthArg("W", "width", "The minimum width of the window.", false, 800, "width");
-TCLAP::ValueArg<int> minHeightArg("H", "height", "The minimum height of the window.", false, 300, "height");
-TCLAP::SwitchArg closeArg("c", "noclose", "Do not close program after selecting");
-TCLAP::UnlabeledMultiArg<std::string> colArg("names", "The names for the collumns. Add as many as you want.", true, "column names");
+TCLAP::CmdLine cmd("Format, and search through text in a table.", ' ', "0.8-master");
+TCLAP::ValueArg<int> returnArg("r", "returncolumn", "Set the column to return data from. The output of this program will be the value inside ( <selected row>, <value of -r> ) ", false, 0, "column");
+TCLAP::ValueArg<std::string> formatArg("f", "format", "The format character. This is where the input is split. Defaults to tab(\\t)", false, "\t", "format");
+TCLAP::ValueArg<int> minWidthArg("W", "width", "Starting width of the window.", false, 800, "width");
+TCLAP::ValueArg<int> minHeightArg("H", "height", "Starting height of the window.", false, 300, "height");
+TCLAP::ValueArg<int> hideColArg("c", "hideCol", "Hide column n", false, -1, "Hidden colum");
+TCLAP::SwitchArg closeArg("n", "noclose", "Do not close program after selecting");
+TCLAP::UnlabeledMultiArg<std::string> colArg("names", "The names for the collumns, each name you type in will create a new column.",  true, "column names");
 
 int main(int argc, char *argv[])
 {
@@ -28,6 +28,7 @@ int main(int argc, char *argv[])
 	cmd.add(formatArg);
 	cmd.add(minWidthArg);
 	cmd.add(minHeightArg);
+	cmd.add(hideColArg);
 	cmd.add(closeArg);
 
 	cmd.add(colArg);
@@ -40,7 +41,6 @@ int main(int argc, char *argv[])
 
 	for(std::string line; std::getline(std::cin, line);)
 	{
-
 		inputList.push_back(line); //Read from stdin and shove it into the inputList vector.
 	}
 

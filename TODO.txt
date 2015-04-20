@@ -1,1 +1,5 @@
-Have it filter by all columns at once.
+Fix sort when it comes to numbers
+
+Allow you to hide certain columns for return purposes
+
+

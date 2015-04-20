@@ -26,10 +26,10 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 
 	QStandardItemModel *model = new QStandardItemModel(0, 0, this);
 
-	for(int iii = 0; iii < colNames.size(); iii++)
+	for(unsigned int iii = 0; iii < colNames.size(); iii++) //Name our columns
 		model->setHorizontalHeaderItem(iii, new QStandardItem(colNames[iii].c_str()));
 
-	for(int iii = 0; iii < input.size(); iii++) //Put input in the table
+	for(unsigned int iii = 0; iii < input.size(); iii++) //Put input in the table
 	{
 		std::string line;
 
@@ -40,20 +40,31 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		std::vector<std::string> strs;
 		boost::split(strs, line, boost::is_any_of( formatArg.getValue() ));
 
-		for(int kkk = 0; kkk < strs.size(); kkk++)
+		for(unsigned int kkk = 0; kkk < strs.size(); kkk++)
 		{
-				QStringList.append(QString(strs[kkk].c_str()));
+			QStringList.append(QString(strs[kkk].c_str()));
 		}
 
 		QList<QStandardItem*> list;
 
 		for(int jjj = 0; jjj < QStringList.size(); jjj++)
 		{
-			list.append(new QStandardItem(QStringList[jjj]));
+			QStandardItem *tmp = new QStandardItem(QStringList[jjj]);
+			/*
+			if(QStringList[jjj].toInt() == 0)
+				tmp->setData(QVariant(QStringList[jjj].toInt()));
+			else
+				tmp->setData(QVariant(QStringList[jjj]));
+			*/
+
+			list.append(tmp);
 		}
 
 		model->appendRow(list);
 	}
+
+	if(hideColArg.getValue() > -1 and hideColArg.getValue() <= ui->tableView->model()->rowCount())
+		ui->tableView->setColumnHidden(hideColArg.getValue(), true);
 
 	ui->tableView->setModel(model);
 	ui->tableView->horizontalHeader()->setStretchLastSection(true);
@@ -82,26 +93,28 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
 	if(arg1 == "" or arg1 == " ") //Do not search for spaces or nothing.
 	{
-		//proxyModel->setFilterWildcard(QString(arg1));
 		return;
 	}
 
-	//proxyModel->setFilterWildcard(QString(arg1));
+	unsigned int rows = ui->tableView->model()->rowCount();
+	unsigned int cols = ui->tableView->model()->columnCount();
 
-	int rows = ui->tableView->model()->rowCount();
-	int cols = ui->tableView->model()->columnCount();
+	for(unsigned int iii = 0; iii < rows; iii++)
+	{
+		ui->tableView->setRowHidden(iii, true); //Hide everything.
+	}
 
 	//Search through the entire table for the inputted text.
-	//Selects the first entry it finds.
-	for(int iii = 0; iii < cols; iii++)
+	//Unhides the matches it finds.
+	for(unsigned int iii = 0; iii < rows; iii++)
 	{
-		for(int jjj = 0; jjj < rows; jjj++)
+		for(unsigned int jjj = 0; jjj < cols; jjj++)
 		{
-			QString current = ui->tableView->model()->data(ui->tableView->model()->index(jjj, iii)).toString();
+			QString current = ui->tableView->model()->data(ui->tableView->model()->index(iii, jjj)).toString();
 			if(current.contains(arg1, Qt::CaseInsensitive))
 			{
-				ui->tableView->selectRow(jjj);
-				return;
+				ui->tableView->setRowHidden(iii, false);
+				break;
 			}
 		}
 	}

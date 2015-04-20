@@ -10,7 +10,7 @@ extern TCLAP::ValueArg<std::string> formatArg;
 
 extern TCLAP::ValueArg<int> minWidthArg;
 extern TCLAP::ValueArg<int> minHeightArg;
-extern TCLAP::ValueArg<int> filterColArg;
+extern TCLAP::ValueArg<int> hideColArg;
 
 extern TCLAP::SwitchArg closeArg;
 
