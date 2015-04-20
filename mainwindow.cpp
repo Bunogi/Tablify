@@ -63,8 +63,10 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		model->appendRow(list);
 	}
 
+	/*
 	if(hideColArg.getValue() > -1 and hideColArg.getValue() <= ui->tableView->model()->rowCount())
 		ui->tableView->setColumnHidden(hideColArg.getValue(), true);
+	*/
 
 	ui->tableView->setModel(model);
 	ui->tableView->horizontalHeader()->setStretchLastSection(true);
@@ -91,21 +93,16 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
-	if(arg1 == "" or arg1 == " ") //Do not search for spaces or nothing.
-	{
-		return;
-	}
-
 	unsigned int rows = ui->tableView->model()->rowCount();
 	unsigned int cols = ui->tableView->model()->columnCount();
 
 	for(unsigned int iii = 0; iii < rows; iii++)
 	{
-		ui->tableView->setRowHidden(iii, true); //Hide everything.
+		ui->tableView->setRowHidden(iii, true); //Unhide everything.
 	}
 
 	//Search through the entire table for the inputted text.
-	//Unhides the matches it finds.
+	//Hides everything that dosn't match.
 	for(unsigned int iii = 0; iii < rows; iii++)
 	{
 		for(unsigned int jjj = 0; jjj < cols; jjj++)
@@ -115,6 +112,20 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 			{
 				ui->tableView->setRowHidden(iii, false);
 				break;
+			}
+		}
+	}
+
+	bool haveSelected(false);
+
+	for(unsigned int iii = 0; iii < rows; iii++)
+	{
+		if(not ui->tableView->isRowHidden(iii))
+		{
+			if(not haveSelected) //Only select the first unhidden row we find.
+			{
+				ui->tableView->selectRow(iii);
+				haveSelected = true;
 			}
 		}
 	}

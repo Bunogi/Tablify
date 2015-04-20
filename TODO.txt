@@ -1,5 +1,7 @@
+Bugfixes:
+	- -c crashes the program with sigsegv.
+
 Fix sort when it comes to numbers
 
 Allow you to hide certain columns for return purposes
-
-
+	- Buggy and terrible
