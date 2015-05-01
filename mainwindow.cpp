@@ -12,6 +12,7 @@
 #include <QStandardItemModel>
 #include <QList>
 #include <QTableWidgetItem>
+#include <QKeyEvent>
 
 //Custom headers
 #include "arguments.h"
@@ -68,6 +69,7 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		ui->tableView->setColumnHidden(hideColArg.getValue(), true);
 	*/
 
+	ui->lineEdit->installEventFilter(this);
 	ui->tableView->setModel(model);
 	ui->tableView->horizontalHeader()->setStretchLastSection(true);
 	ui->tableView->resizeColumnsToContents();
@@ -89,6 +91,33 @@ void MainWindow::on_tableView_doubleClicked(const QModelIndex &index)
 	std::cout<< qPrintable(output) << "\n";
 	if(not closeArg.getValue())
 		exit(0);
+}
+
+bool MainWindow::eventFilter(QObject *target, QEvent *event)
+{
+	if(target == ui->lineEdit and event->type() == QEvent::KeyPress)
+	{
+		QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
+
+		QModelIndexList indexes = ui->tableView->selectionModel()->selection().indexes();
+		QModelIndex index = indexes.at(0);
+		int row = index.row();
+
+		if(keyEvent->key() == Qt::Key_Down)
+		{
+			if(row + 1 > ui->tableView->model()->rowCount()) { return false; } //Ensure we don't try selecting something outside the table
+			ui->tableView->selectRow(row + 1);
+			return true;
+		}
+		else if(keyEvent->key() == Qt::Key_Up)
+		{
+			if(row - 1 < 0) { return false; } //Ensure we don't try selecting something outside the table
+			ui->tableView->selectRow(row - 1);
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)

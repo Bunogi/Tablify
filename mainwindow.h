@@ -27,6 +27,7 @@ private slots:
 
 private:
 	Ui::MainWindow *ui;
+	bool eventFilter(QObject *target, QEvent *event);
 };
 
 #endif // MAINWINDOW_H
