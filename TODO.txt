@@ -1,6 +1,3 @@
-Allow you to hide certain columns for return purposes
-	- Buggy and terrible
-
 Allow you to sort by a certain column by default
 
 Fix sort when it comes to numbers

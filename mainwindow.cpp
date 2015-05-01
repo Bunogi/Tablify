@@ -51,12 +51,6 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		for(int jjj = 0; jjj < QStringList.size(); jjj++)
 		{
 			QStandardItem *tmp = new QStandardItem(QStringList[jjj]);
-			/*
-			if(QStringList[jjj].toInt() == 0)
-				tmp->setData(QVariant(QStringList[jjj].toInt()));
-			else
-				tmp->setData(QVariant(QStringList[jjj]));
-			*/
 
 			list.append(tmp);
 		}
@@ -64,10 +58,6 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		model->appendRow(list);
 	}
 
-	/*
-	if(hideColArg.getValue() > -1 and hideColArg.getValue() <= ui->tableView->model()->rowCount())
-		ui->tableView->setColumnHidden(hideColArg.getValue(), true);
-	*/
 
 	ui->lineEdit->installEventFilter(this);
 	ui->tableView->setModel(model);
@@ -75,6 +65,12 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 	ui->tableView->resizeColumnsToContents();
 
 	ui->tableView->selectRow(0);
+
+	int cols = model->columnCount();
+	if(hideColArg.getValue() > -1 and hideColArg.getValue() <= cols)
+	{
+		ui->tableView->setColumnHidden(hideColArg.getValue(), true);
+	}
 }
 
 MainWindow::~MainWindow()

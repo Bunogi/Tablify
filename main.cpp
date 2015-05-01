@@ -11,7 +11,7 @@
 #include <QtGui>
 
 //These need to be global
-TCLAP::CmdLine cmd("Format, and search through text in a table.", ' ', "0.8-master");
+TCLAP::CmdLine cmd("Format, and search through text in a table.", ' ', "0.9-master");
 TCLAP::ValueArg<int> returnArg("r", "returncolumn", "Set the column to return data from. The output of this program will be the value inside ( <selected row>, <value of -r> ) ", false, 0, "column");
 TCLAP::ValueArg<std::string> formatArg("f", "format", "The format character. This is where the input is split. Defaults to tab(\\t)", false, "\t", "format");
 TCLAP::ValueArg<int> minWidthArg("W", "width", "Starting width of the window.", false, 800, "width");
