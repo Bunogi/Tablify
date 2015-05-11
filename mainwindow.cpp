@@ -98,18 +98,29 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 		QModelIndexList indexes = ui->tableView->selectionModel()->selection().indexes();
 		QModelIndex index = indexes.at(0);
 		int row = index.row();
+		int totalRows = ui->tableView->model()->rowCount();
 
 		if(keyEvent->key() == Qt::Key_Down)
 		{
-			if(row + 1 > ui->tableView->model()->rowCount()) { return false; } //Ensure we don't try selecting something outside the table
-			ui->tableView->selectRow(row + 1);
-			return true;
+			for(int iii = row + 1; iii < totalRows; iii++)
+			{
+				if(not ui->tableView->isRowHidden(iii))
+				{
+					ui->tableView->selectRow(iii);
+					return true;
+				}
+			}
 		}
 		else if(keyEvent->key() == Qt::Key_Up)
 		{
-			if(row - 1 < 0) { return false; } //Ensure we don't try selecting something outside the table
-			ui->tableView->selectRow(row - 1);
-			return true;
+			for(int iii = row - 1; iii > 0; iii--)
+			{
+				if(not ui->tableView->isRowHidden(iii))
+				{
+					ui->tableView->selectRow(iii);
+					return true;
+				}
+			}
 		}
 	}
 
@@ -127,7 +138,7 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 	}
 
 	//Search through the entire table for the inputted text.
-	//Hides everything that dosn't match.
+	//Hides everything that doesn't match.
 	for(unsigned int iii = 0; iii < rows; iii++)
 	{
 		for(unsigned int jjj = 0; jjj < cols; jjj++)

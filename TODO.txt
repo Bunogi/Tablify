@@ -1,3 +1,8 @@
-Allow you to sort by a certain column by default
+BUGFIXES:
+	- Filter + arrow keys selects hidden rows
+	- Filters hidden columns
+	- Qts sorting is buggy as hell and doesn't work properly
 
-Fix sort when it comes to numbers
+Add home + end
+
+Allow you to sort by a certain column by default
