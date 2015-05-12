@@ -41,6 +41,12 @@
       <property name="tabKeyNavigation">
        <bool>false</bool>
       </property>
+      <property name="showDropIndicator" stdset="0">
+       <bool>false</bool>
+      </property>
+      <property name="dragDropOverwriteMode">
+       <bool>false</bool>
+      </property>
       <property name="alternatingRowColors">
        <bool>true</bool>
       </property>
@@ -62,8 +68,14 @@
       <attribute name="horizontalHeaderVisible">
        <bool>true</bool>
       </attribute>
+      <attribute name="horizontalHeaderStretchLastSection">
+       <bool>true</bool>
+      </attribute>
       <attribute name="verticalHeaderVisible">
        <bool>false</bool>
+      </attribute>
+      <attribute name="verticalHeaderShowSortIndicator" stdset="0">
+       <bool>true</bool>
       </attribute>
      </widget>
     </item>

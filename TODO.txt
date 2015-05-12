@@ -1,8 +1,5 @@
 BUGFIXES:
-	- Filter + arrow keys selects hidden rows
 	- Filters hidden columns
 	- Qts sorting is buggy as hell and doesn't work properly
-
-Add home + end
 
 Allow you to sort by a certain column by default

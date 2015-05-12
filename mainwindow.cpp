@@ -13,9 +13,11 @@
 #include <QList>
 #include <QTableWidgetItem>
 #include <QKeyEvent>
+#include <QSortFilterProxyModel>
 
 //Custom headers
 #include "arguments.h"
+#include "tablifymodel.h"
 
 MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vector<std::string> colNames) :
 	QMainWindow(parent),
@@ -25,7 +27,7 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 
 	resize(minWidthArg.getValue(), minHeightArg.getValue());
 
-	QStandardItemModel *model = new QStandardItemModel(0, 0, this);
+	QStandardItemModel *model = new QStandardItemModel;
 
 	for(unsigned int iii = 0; iii < colNames.size(); iii++) //Name our columns
 		model->setHorizontalHeaderItem(iii, new QStandardItem(colNames[iii].c_str()));
@@ -50,7 +52,9 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 
 		for(int jjj = 0; jjj < QStringList.size(); jjj++)
 		{
-			QStandardItem *tmp = new QStandardItem(QStringList[jjj]);
+			QStandardItem *tmp;
+
+			tmp = new QStandardItem(QStringList[jjj]);
 
 			list.append(tmp);
 		}
@@ -58,19 +62,14 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 		model->appendRow(list);
 	}
 
-
 	ui->lineEdit->installEventFilter(this);
-	ui->tableView->setModel(model);
-	ui->tableView->horizontalHeader()->setStretchLastSection(true);
+	QSortFilterProxyModel *proxyModel = new QSortFilterProxyModel;
+	proxyModel->setSourceModel(model);
+	proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
+	ui->tableView->setModel(proxyModel);
 	ui->tableView->resizeColumnsToContents();
 
 	ui->tableView->selectRow(0);
-
-	int cols = model->columnCount();
-	if(hideColArg.getValue() > -1 and hideColArg.getValue() <= cols)
-	{
-		ui->tableView->setColumnHidden(hideColArg.getValue(), true);
-	}
 }
 
 MainWindow::~MainWindow()
@@ -98,11 +97,12 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 		QModelIndexList indexes = ui->tableView->selectionModel()->selection().indexes();
 		QModelIndex index = indexes.at(0);
 		int row = index.row();
-		int totalRows = ui->tableView->model()->rowCount();
+		int rowCount = ui->tableView->model()->rowCount();
 
-		if(keyEvent->key() == Qt::Key_Down)
+		switch(keyEvent->key())
 		{
-			for(int iii = row + 1; iii < totalRows; iii++)
+		case Qt::Key_Down:
+			for(int iii = row + 1; iii <= rowCount; iii++)
 			{
 				if(not ui->tableView->isRowHidden(iii))
 				{
@@ -110,10 +110,9 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 					return true;
 				}
 			}
-		}
-		else if(keyEvent->key() == Qt::Key_Up)
-		{
-			for(int iii = row - 1; iii > 0; iii--)
+			return false;
+		case Qt::Key_Up:
+			for(int iii = row - 1; iii >= 0; iii--)
 			{
 				if(not ui->tableView->isRowHidden(iii))
 				{
@@ -121,27 +120,60 @@ bool MainWindow::eventFilter(QObject *target, QEvent *event)
 					return true;
 				}
 			}
-		}
+			break;
+		case Qt::Key_End:
+			for(int iii = rowCount - 1; iii >= 0; --iii)
+			{
+				if(not ui->tableView->isRowHidden(iii))
+				{
+					ui->tableView->selectRow(iii);
+					return true;
+				}
+			}
+			break;
+		case Qt::Key_Home:
+			for(int iii = 0; iii < rowCount; iii++)
+			{
+				if(not ui->tableView->isRowHidden(iii))
+				{
+					ui->tableView->selectRow(iii);
+					return true;
+				}
+			}
+			break;
+		case Qt::Key_PageDown:
+			{
+			QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_PageDown, Qt::NoModifier);
+			QCoreApplication::postEvent(ui->tableView, event);
+			return true;
+			}
+		case Qt::Key_PageUp:
+			{
+			QKeyEvent *event = new QKeyEvent(QEvent::KeyPress, Qt::Key_PageUp, Qt::NoModifier);
+			QCoreApplication::postEvent(ui->tableView, event);
+			return true;
+			}
 	}
-
+	}
 	return false;
 }
 
+
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 {
-	unsigned int rows = ui->tableView->model()->rowCount();
-	unsigned int cols = ui->tableView->model()->columnCount();
+	int rows = ui->tableView->model()->rowCount();
+	int cols = ui->tableView->model()->columnCount();
 
-	for(unsigned int iii = 0; iii < rows; iii++)
+	for(int iii = 0; iii < rows; iii++)
 	{
 		ui->tableView->setRowHidden(iii, true); //Unhide everything.
 	}
 
 	//Search through the entire table for the inputted text.
 	//Hides everything that doesn't match.
-	for(unsigned int iii = 0; iii < rows; iii++)
+	for(int iii = 0; iii < rows; iii++)
 	{
-		for(unsigned int jjj = 0; jjj < cols; jjj++)
+		for(int jjj = 0; jjj < cols; jjj++)
 		{
 			QString current = ui->tableView->model()->data(ui->tableView->model()->index(iii, jjj)).toString();
 			if(current.contains(arg1, Qt::CaseInsensitive))
@@ -152,17 +184,12 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1)
 		}
 	}
 
-	bool haveSelected(false);
-
-	for(unsigned int iii = 0; iii < rows; iii++)
+	for(int iii = 0; iii < rows; iii++)
 	{
 		if(not ui->tableView->isRowHidden(iii))
 		{
-			if(not haveSelected) //Only select the first unhidden row we find.
-			{
-				ui->tableView->selectRow(iii);
-				haveSelected = true;
-			}
+			ui->tableView->selectRow(iii);
+			break;
 		}
 	}
 }

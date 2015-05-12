@@ -38,10 +38,15 @@ int main(int argc, char *argv[])
 	std::vector<std::string> columnNames = colArg.getValue();
 
 	std::vector<std::string> inputList;
-
 	for(std::string line; std::getline(std::cin, line);)
 	{
 		inputList.push_back(line); //Read from stdin and shove it into the inputList vector.
+	}
+
+	if(inputList.empty())
+	{
+		std::cerr<<"No input!\n";
+		exit(1);
 	}
 
 	QApplication a(argc, argv);

@@ -14,9 +14,11 @@ TEMPLATE = app
 CONFIG += c++11
 
 SOURCES += main.cpp\
-				mainwindow.cpp
+				mainwindow.cpp \
+    tablifymodel.cpp
 
 HEADERS  += mainwindow.h \
-		arguments.h
+		arguments.h \
+    tablifymodel.h
 
 FORMS    += mainwindow.ui
