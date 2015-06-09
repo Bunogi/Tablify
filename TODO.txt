@@ -1,5 +1,6 @@
-BUGFIXES:
-	- Filters hidden columns
-	- Qts sorting is buggy as hell and doesn't work properly
-
 Allow you to sort by a certain column by default
+Allow you to choose if you want the headers for the table or not
+Add stylesheet support:
+	- Read from ~/.config/tablify/style.qss
+	- Allow you to specify which stylesheet to use by path
+

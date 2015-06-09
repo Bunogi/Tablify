@@ -17,7 +17,6 @@
 
 //Custom headers
 #include "arguments.h"
-#include "tablifymodel.h"
 
 MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vector<std::string> colNames) :
 	QMainWindow(parent),
@@ -70,6 +69,17 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 	ui->tableView->resizeColumnsToContents();
 
 	ui->tableView->selectRow(0);
+
+	if(hideColArg.isSet() and hideColArg.getValue() > -1)
+	{
+		int hiddenCol(hideColArg.getValue());
+		if(hiddenCol > ui->tableView->model()->columnCount())
+			std::cerr<< "You're trying to hide a column that doesn't exist! Ignoring.";
+		else
+		{
+			ui->tableView->setColumnHidden(hiddenCol, true);
+		}
+	}
 }
 
 MainWindow::~MainWindow()
