@@ -1,4 +1,0 @@
-Add stylesheet support:
-	- Read from ~/.config/tablify/style.qss
-	- Allow you to specify which stylesheet to use by path
-

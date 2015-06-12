@@ -11,7 +11,9 @@
 #include "ui_mainwindow.h"
 #include <QStandardItemModel>
 #include <QList>
+#include <QDir>
 #include <QTableWidgetItem>
+#include <QStandardPaths>
 #include <QKeyEvent>
 #include <QSortFilterProxyModel>
 
@@ -23,6 +25,18 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 	ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
+
+	QString path = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + "/tablify/stylesheet.qss";
+	QFile styleFile(path);
+
+	styleFile.open(QFile::ReadOnly);
+
+	if(not styleFile.pos() == 0)
+	{
+		QString styleSheet(QLatin1String(styleFile.readAll()));
+		qApp->setStyleSheet(styleSheet);
+	}
+	styleFile.close();
 
 	resize(minWidthArg.getValue(), minHeightArg.getValue());
 
@@ -70,16 +84,6 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 
 	ui->tableView->selectRow(0);
 
-	if(hideColArg.isSet() and hideColArg.getValue() > -1)
-	{
-		int hiddenCol(hideColArg.getValue());
-		if(hiddenCol > ui->tableView->model()->columnCount())
-			std::cerr<< "You're trying to hide a column that doesn't exist! Ignoring.";
-		else
-		{
-			ui->tableView->setColumnHidden(hiddenCol, true);
-		}
-	}
 }
 
 MainWindow::~MainWindow()
