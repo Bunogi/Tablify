@@ -7,10 +7,6 @@ Dependencies:
 - Qmake
 - TCLAP
 
-To compile:
+To compile and install:
 
-mkdir Build
-cd Build
-qmake ..
-make
-(Move the freshly compiled executable to /usr/bin or /bin depending on your distrobution if you want to install it)
+Run the included install.sh

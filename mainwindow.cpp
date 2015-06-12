@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 
 	styleFile.open(QFile::ReadOnly);
 
-	if(not styleFile.pos() == 0)
+	if(styleFile.pos() == 0)
 	{
 		QString styleSheet(QLatin1String(styleFile.readAll()));
 		qApp->setStyleSheet(styleSheet);
@@ -81,6 +81,9 @@ MainWindow::MainWindow(QWidget *parent, std::vector<std::string> input, std::vec
 	proxyModel->setSortCaseSensitivity(Qt::CaseInsensitive);
 	ui->tableView->setModel(proxyModel);
 	ui->tableView->resizeColumnsToContents();
+
+	if(hideColArg.isSet() and hideColArg.getValue() <= ui->tableView->model()->columnCount())
+		ui->tableView->hideColumn(hideColArg.getValue());
 
 	ui->tableView->selectRow(0);
 
