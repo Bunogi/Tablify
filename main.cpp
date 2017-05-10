@@ -1,6 +1,3 @@
-//Tablify
-//Written by Bunogi <bunogi@cwan.nl>
-
 //Std includes
 #include <string>
 #include <vector>
